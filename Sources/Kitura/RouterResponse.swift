@@ -361,16 +361,6 @@ public class RouterResponse {
         return send(renderedResource)
     }
     
-    public func render<T: Codable>(_ resource: String, using value: T,
-                                   options: RenderingOptions = NullRenderingOptions()) throws -> RouterResponse {
-        guard let router = getRouterThatCanRender(resource: resource) else {
-            throw TemplatingError.noTemplateEngineForExtension(extension: "")
-        }
-        
-        let renderedResponse = try router.render(template: resource, context: value)
-        return send(renderedResponse)
-    }
-    
     public func render<T: Codable>(_ resource: String, context: T, forKey key: String,
                                    options: RenderingOptions = NullRenderingOptions()) throws -> RouterResponse {
         guard let router = getRouterThatCanRender(resource: resource) else {
