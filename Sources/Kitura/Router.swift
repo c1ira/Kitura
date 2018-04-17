@@ -209,6 +209,35 @@ public class Router {
                                          templateName: resourceWithExtension)
     }
     
+    internal func render<T: Codable>(template: String, context: T,
+                                     options: RenderingOptions = NullRenderingOptions()) throws -> String {
+        let (optionalFileExtension, resourceWithExtension) = calculateExtension(template: template)
+        // extension is nil (not the empty string), this should not happen
+        guard let fileExtension = optionalFileExtension else {
+            throw TemplatingError.noTemplateEngineForExtension(extension: "")
+        }
+        
+        guard let templateEngine = getTemplateEngine(template: template) else {
+            if fileExtension.isEmpty {
+                throw TemplatingError.noDefaultTemplateEngineAndNoExtensionSpecified
+            }
+            
+            throw TemplatingError.noTemplateEngineForExtension(extension: fileExtension)
+        }
+        
+        let filePath: String
+        if let decodedResourceExtension = resourceWithExtension.removingPercentEncoding {
+            filePath = viewsPath + decodedResourceExtension
+        } else {
+            Log.warning("Unable to decode url \(resourceWithExtension)")
+            filePath = viewsPath + resourceWithExtension
+        }
+        
+        let absoluteFilePath = StaticFileServer.ResourcePathHandler.getAbsolutePath(for: filePath)
+        return try templateEngine.render(filePath: absoluteFilePath, context: context, options: options,
+                                         templateName: resourceWithExtension)
+    }
+    
     internal func render<T: Codable>(template: String, context: T, forKey key: String?,
                                      options: RenderingOptions = NullRenderingOptions()) throws -> String {
         let (optionalFileExtension, resourceWithExtension) = calculateExtension(template: template)
