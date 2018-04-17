@@ -209,7 +209,7 @@ public class Router {
                                          templateName: resourceWithExtension)
     }
     
-    internal func render<T: Codable>(template: String, context: T, forKey key: String,
+    internal func render<T: Codable>(template: String, context: T, forKey key: String?,
                                      options: RenderingOptions = NullRenderingOptions()) throws -> String {
         let (optionalFileExtension, resourceWithExtension) = calculateExtension(template: template)
         // extension is nil (not the empty string), this should not happen
@@ -238,7 +238,7 @@ public class Router {
                                          templateName: resourceWithExtension)
     }
     
-    internal func render<T: Codable>(template: String, context: [T], forKey key: String,
+    internal func render<T: Codable>(template: String, context: [T], forKey key: String?,
                                      options: RenderingOptions = NullRenderingOptions()) throws -> String {
         let (optionalFileExtension, resourceWithExtension) = calculateExtension(template: template)
         // extension is nil (not the empty string), this should not happen
@@ -267,7 +267,7 @@ public class Router {
                                          templateName: resourceWithExtension)
     }
     
-    internal func render<T: Codable>(template: String, context: [String: [T]], forKey key: String,
+    internal func render<T: Codable>(template: String, context: [String: [T]],
                                      options: RenderingOptions = NullRenderingOptions()) throws -> String {
         let (optionalFileExtension, resourceWithExtension) = calculateExtension(template: template)
         // extension is nil (not the empty string), this should not happen
